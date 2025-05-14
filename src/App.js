@@ -5,6 +5,14 @@ import { ReactComponent as BVhod } from './svgF/frame88.svg';
 import { ReactComponent as BReg } from './svgF/frame-88.svg';
 import { ReactComponent as BReg1} from './svgF/frame-89.svg';
 
+// App.js (или где вы делаете запросы)
+const API_URL = process.env.REACT_APP_API_URL || (
+  window.location.hostname === 'localhost'
+    ? 'http://localhost:8080'
+    : 'https://observantly-earnest-finfoot.cloudpub.ru'
+);
+
+
 // Добавляем стили для анимаций
 const styles = `
   @keyframes fadeIn {
@@ -34,59 +42,182 @@ const styles = `
   }
 `;
 
+function Dashboard() {
+  const rooms = ['Кухня', 'Гардероб', 'Спальня'];
+
+  return (
+    <div style={{
+      width: '435px',
+      height: '852px',
+      background: '#191919',
+      color: 'white',
+      fontFamily: 'Inter, sans-serif',
+      padding: '20px',
+      boxSizing: 'border-box',
+      overflowY: 'auto',
+      position: 'relative'
+    }}>
+      {/* Заголовок */}
+      <h1 style={{ margin: 0, fontSize: 32 }}>Я</h1>
+
+      {/* Секция «Мои задачи» */}
+      <h2 style={{ marginTop: 24, fontSize: 20 }}>Мои задачи</h2>
+      <div style={{
+        width: 100, height: 100,
+        background: 'linear-gradient(135deg, #2A2A2A 0%, #141414 100%)',
+        borderRadius: 12,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 48, color: '#555'
+      }}>+</div>
+
+      {/* Секция «Общие задачи» */}
+      <h2 style={{ marginTop: 32, fontSize: 20 }}>Общие задачи</h2>
+      <div style={{
+        width: 100, height: 100,
+        background: 'linear-gradient(135deg, #2A2A2A 0%, #141414 100%)',
+        borderRadius: 12,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 48, color: '#555'
+      }}>+</div>
+
+      {/* Разделитель */}
+      <div style={{
+        width: '50%', height: 2,
+        background: '#333',
+        margin: '24px auto'
+      }} />
+
+      {/* Секция «Моя семья» */}
+      <h2 style={{ fontSize: 20 }}>Моя семья</h2>
+      <div style={{
+        width: 100, height: 100,
+        background: 'linear-gradient(135deg, #2A2A2A 0%, #141414 100%)',
+        borderRadius: 12,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: 48, color: '#555'
+      }}>+</div>
+
+      {/* Секция «Комнаты» */}
+      <h2 style={{ marginTop: 32, fontSize: 20 }}>Комнаты</h2>
+      {rooms.map((r, i) => (
+        <div key={i} style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '12px 16px',
+          background: '#2A2A2A',
+          borderRadius: 8,
+          marginTop: i === 0 ? 8 : 4,
+          cursor: 'pointer'
+        }}>
+          <span>{r}</span>
+          <span style={{ fontSize: 18 }}>›</span>
+        </div>
+      ))}
+      <button style={{
+        width: '100%',
+        height: 48,
+        marginTop: 16,
+        background: '#2C96E1',
+        border: 'none',
+        borderRadius: 8,
+        color: 'white',
+        fontSize: 16,
+        cursor: 'pointer'
+      }}>
+        Добавить комнату
+      </button>
+
+      {/* Секция «История моих задач» */}
+      <h2 style={{ marginTop: 32, fontSize: 20 }}>История моих задач</h2>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 8
+      }}>
+        <button style={{ background: 'none', border: 'none', color: 'white', fontSize: 24, cursor: 'pointer' }}>‹</button>
+        <span style={{ fontSize: 16 }}>Март 2025</span>
+        <button style={{ background: 'none', border: 'none', color: 'white', fontSize: 24, cursor: 'pointer' }}>›</button>
+      </div>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(7, 1fr)',
+        gap: 4,
+        marginTop: 8
+      }}>
+        {Array(35).fill(0).map((_, i) => (
+          <div key={i} style={{
+            width: 40,
+            height: 40,
+            background: '#2A2A2A',
+            borderRadius: 4
+          }}/>
+        ))}
+      </div>
+
+      {/* Кнопка «Рейтинг» */}
+      <button style={{
+        position: 'sticky',
+        bottom: 20,
+        marginTop: 32,
+        width: '100%',
+        height: 48,
+        background: '#2C96E1',
+        border: 'none',
+        borderRadius: 8,
+        color: 'white',
+        fontSize: 16,
+        cursor: 'pointer'
+      }}>
+        Рейтинг
+      </button>
+    </div>
+  );
+}
+
 function App() {
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showLoginModal, setShowLoginModal]       = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // Состояния для формы регистрации
-  const [regData, setRegData] = useState({
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+  const [email, setEmail]                         = useState('');
+  const [password, setPassword]                   = useState('');
+  const [isLoading, setIsLoading]                 = useState(false);
+  const [regData, setRegData]                     = useState({
+    firstName: '', lastName: '', middleName: '',
+    email: '', password: '', confirmPassword: ''
   });
+  const [isAuthenticated, setIsAuthenticated]     = useState(false);
 
   const handleLoginSubmit = async () => {
-    if (!email || !password) {
-      alert('Пожалуйста, заполните все поля');
-      return;
+  console.log('🏹 Попытка логина для', email);
+  setIsLoading(true);
+  try {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password })
+});
+    console.log('🎯 Статус ответа:', response.status);
+
+    if (!response.ok) {
+      // например 401
+      const text = await response.text();
+      console.warn('Ошибка авторизации:', text);
+      throw new Error(response.status.toString());
     }
 
-    setIsLoading(true);
-    
-    try {
-      const response = await fetch('http://localhost:8080/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password
-        }),
-      });
+    const user = await response.json();
+    console.log('✅ Успешный логин, юзер:', user);
+    setIsAuthenticated(true);
+    setShowLoginModal(false);
+  } catch (err) {
+    console.error('🔥 login failed:', err);
+    alert('Неверный email или пароль');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-      if (!response.ok) {
-        throw new Error('Ошибка авторизации');
-      }
-
-      const data = await response.json();
-      console.log('Успешный вход:', data);
-      setShowLoginModal(false);
-      alert('Вход выполнен успешно!');
-      
-    } catch (error) {
-      console.error('Ошибка:', error);
-      alert('Неверный email или пароль');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleRegisterChange = (e) => {
     const { name, value } = e.target;
@@ -96,25 +227,51 @@ function App() {
     }));
   };
 
-  const handleRegisterSubmit = () => {
-    // Проверка заполнения всех полей
-    if (!Object.values(regData).every(Boolean)) {
-      alert('Пожалуйста, заполните все поля');
-      return;
-    }
-    
-    // Проверка совпадения паролей
-    if (regData.password !== regData.confirmPassword) {
-      alert('Пароли не совпадают');
-      return;
-    }
-    
+  const handleRegisterSubmit = async () => {
+  // 1) Проверка заполнения всех полей
+  if (!Object.values(regData).every(Boolean)) {
+    alert('Пожалуйста, заполните все поля');
+    return;
+  }
+  // 2) Пароли совпадают?
+  if (regData.password !== regData.confirmPassword) {
+    alert('Пароли не совпадают');
+    return;
+  }
 
-  };
+  try {
+    const response = await fetch(`${API_URL}/api/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: regData.email,
+      role: 'USER',
+      password: regData.password
+    })
+});
 
+    if (!response.ok) {
+      const err = await response.text();
+      throw new Error(err || 'Ошибка регистрации');
+    }
+
+    const user = await response.json();
+    console.log('Registered:', user);
+    alert('Регистрация прошла успешно');
+    setShowRegisterModal(false);
+  } catch (e) {
+    console.error(e);
+    alert('Не удалось зарегистрироваться: ' + e.message);
+  }
+};
+if (isAuthenticated) {
+    return <Dashboard />;
+  }
+
+  
   return (
     <div style={{
-      width: '393px',
+      width: '435px',
       height: '852px',
       position: 'absolute',
       top: '0',
@@ -348,7 +505,7 @@ function App() {
               position: 'absolute',
               width: '336px',
               height: '48px',
-              top: '771px',
+              top: '600px',   // было 771px
               left: '29px',
               zIndex: 50,
               cursor: isLoading ? 'default' : 'pointer',
@@ -361,6 +518,7 @@ function App() {
               pointerEvents: 'none'
             }} />
           </div>
+
 
           {/* Кнопка закрытия */}
           <button 
@@ -392,7 +550,8 @@ function App() {
           bottom: 0,
           background: 'rgba(0, 0, 0, 0.7)',
           backdropFilter: 'blur(5px)',
-          zIndex: 100
+          zIndex: 100,
+          overflowY: 'auto'    // добавляем прокрутку по вертикали
         }}>
           {/* Заголовок "Регистрация" */}
           <h2 style={{ 
