@@ -78,7 +78,7 @@ export default function App() {
         onRegisterClick={() => setShowRegister(true)}
       />
 
-      {showLogin && (
+      {/* {showLogin && (
         <LoginModal
           email={email}
           password={password}
@@ -87,6 +87,20 @@ export default function App() {
           isLoading={isLoading}
           onClose={() => setShowLogin(false)}
           onSubmit={handleLogin}
+        />
+      )} */}
+      {showLogin && (
+        <LoginModal
+          email={email}
+          password={password}
+          setEmail={setEmail}
+          setPassword={setPassword}
+          isLoading={isLoading}
+          onClose={() => setShowLogin(false)}
+          onSubmit={() => {
+            setIsAuthenticated(true);
+            setShowLogin(false);
+          }}
         />
       )}
 
